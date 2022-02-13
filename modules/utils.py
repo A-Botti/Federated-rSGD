@@ -105,3 +105,20 @@ def test_metrics(model, test_ds, criterion, e_batchSize):
     accuracy = correct/len(test_loader.dataset)
     
     return loss, accuracy
+
+
+def replicas_distance(glob_w, w):
+    """
+    computes distance of round partecipating clients from the barycenter
+    Params:
+    - glob_w (server_model.state_dict()):   central replica parameters
+    - w (list of model.state_dict()):       list of the k clients' model parmeters that are sent to the server at each communication round
+    Returns: server updated weights
+    """
+    dists = []
+    for wr in w:
+        dist = 0
+        for k in wr.keys():
+            dist += torch.nn.functional.mse_loss(glob_w[k], wr[k], reduction = "sum")
+        dists.append(dist)             
+    return sum(dists)
