@@ -8,7 +8,7 @@ def get_dataset(dataset):
     """
     Retrieve the selected dataset train and test set 
     
-    Param: dataset (string) : either 'mnist' or 'cifar10'
+    Param: dataset (string) : either 'mnist', 'fminst' or 'cifar10'
     returns: train and test splits from source
     """
     
@@ -22,10 +22,24 @@ def get_dataset(dataset):
                                       ])
 
         # will download dataset if not already downloaded; meanwhile applying the transformations
-        trainset = datasets.MNIST('./data/mnist/', train=True, download=True, transform=transform)
+        trainset = datasets.MNIST('../data/mnist/', train=True, download=True, transform=transform)
         testset = datasets.MNIST('../data/mnist/', train=False, download=True, transform=transform)
         
         
+    elif dataset == "fmnist":
+
+        # Same transform used for train and test
+        transform = transforms.Compose([#transforms.Pad(2),
+                                        transforms.ToTensor(),
+                                        transforms.Normalize(mean = (0.1307,),
+                                                             std = (0.3081,))
+                                      ])
+
+        # will download dataset if not already downloaded; meanwhile applying the transformations
+        trainset = datasets.FashionMNIST('../data/fmnist/', train=True, download=True, transform=transform)
+        testset = datasets.FashionMNIST('../data/fmnist/', train=False, download=True, transform=transform) 
+
+
     elif dataset == "cifar10":
         
         # Different transform for train & test, we do some augmentation on training
@@ -40,7 +54,7 @@ def get_dataset(dataset):
                                                                   std = (0.229, 0.224, 0.225))
                                       ])
         # Download CIFAR10 dateset Training and Test data while applying transforms
-        trainset = datasets.CIFAR10('./data/cifar/', train=True, download=True, transform=transform_train)
+        trainset = datasets.CIFAR10('../data/cifar/', train=True, download=True, transform=transform_train)
         testset = datasets.CIFAR10('../data/cifar/', train=False, download=True, transform=transform_test)
         
     return trainset, testset

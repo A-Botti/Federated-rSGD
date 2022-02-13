@@ -26,8 +26,8 @@ def iid_partition(dataset, n_clients):
 
 def non_iid_partition(dataset, n_clients, num_shards_per_client):
     """
-    Creating a NON-I.I.D paritition of data over clients (in the paper, each client has 2 shards)
-
+    Creating a NON-I.I.D paritition of data over clients 
+    
     params:
     - dataset (torch.utils.Dataset):  dataset from source
     - n_clients (int):                number of Clients between which to split the data
