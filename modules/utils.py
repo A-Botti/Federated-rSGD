@@ -92,17 +92,18 @@ def test_metrics(model, test_ds, criterion, e_batchSize):
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     test_loader = DataLoader(test_ds, batch_size=e_batchSize)
 
-    # inference and prediction for each batch
-    for data, labels in test_loader:      
-        data, labels = data.to(device), labels.to(device)
+    with torch.no_grad():
+        # inference and prediction for each batch
+        for data, labels in test_loader:      
+            data, labels = data.to(device), labels.to(device)
 
-        output = model(data)
-        loss += criterion(output, labels).item()                #sum up batch loss
-        pred = output.argmax(dim=1, keepdim=True)               #get predicted class index
-        correct += pred.eq(labels.view_as(pred)).sum().item()
+            output = model(data)
+            loss += criterion(output, labels).item()                #sum up batch loss
+            pred = output.argmax(dim=1, keepdim=True)               #get predicted class index
+            correct += pred.eq(labels.view_as(pred)).sum().item()
 
-    loss /= len(test_loader.dataset)
-    accuracy = correct/len(test_loader.dataset)
+        loss /= len(test_loader.dataset)
+        accuracy = correct/len(test_loader.dataset)
     
     return loss, accuracy
 
